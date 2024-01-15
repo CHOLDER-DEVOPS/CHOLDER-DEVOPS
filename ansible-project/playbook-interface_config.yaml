@@ -1,0 +1,31 @@
+---
+- name: Config L3 interface
+  hosts: Cisco
+  gather_facts: no   
+  tasks: 
+    - name: Import JSON data from file feed it to _json filter
+      ansible.builtin.set_fact:
+        interface_data: "{{ lookup('file' , 'interface_data.json') | from_json }}"
+    
+    - name: Config L3 interface CISCONXOS
+      cisco.nxos.nxos_config:
+        lines:
+          - "no switchport"
+          - "ip address {{ item.ip }}"
+          - "description {{ item.description }}"
+        parents: "interface {{ item.interface }}"
+      with_items: "{{ interface_data['%s' | format(inventory_hostname)] }}"
+      # these item Mentions are VARS coming from the with items loop.
+      when: ansible_network_os == 'cisco.nxos.nxos'
+
+    - name: Config L3 interface CISCOIOS
+      cisco.ios.ios_config:
+        lines:               
+          - "ip address {{ item.ip }}"
+          - "description {{ item.description }}"
+        parents: "interface {{ item.interface }}"
+      become: true
+      become_method: enable
+      when: ansible_network_os == 'cisco.ios.ios'
+      with_items: "{{ interface_data['%s' | format(inventory_hostname)] }}"
+      # these item Mentions are VARS coming from the with items loop.      

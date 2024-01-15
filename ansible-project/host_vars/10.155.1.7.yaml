@@ -1,0 +1,4 @@
+---
+loopback: 7.7.7.7
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: Fortinet.Fortios

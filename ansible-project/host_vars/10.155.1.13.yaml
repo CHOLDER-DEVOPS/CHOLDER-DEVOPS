@@ -1,0 +1,3 @@
+---
+loopback: 13.13.13.13
+ansible_network_os: cisco.ios.ios

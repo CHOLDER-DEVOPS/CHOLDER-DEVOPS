@@ -1,0 +1,3 @@
+---
+ansible_network_os: cisco.nxos.nxos
+loopback: 14.14.14.14

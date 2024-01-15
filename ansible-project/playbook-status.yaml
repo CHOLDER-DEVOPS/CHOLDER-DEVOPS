@@ -1,0 +1,92 @@
+---
+- name: Network Status Check
+  hosts: all
+  gather_facts: no
+  tasks:
+
+    - name: Check Cisco NXOS Devices
+      cisco.nxos.nxos_command:
+        commands:
+          - "show version | include up" 
+          - show ip inter brief 
+      register: show_output
+      when: ansible_network_os == 'cisco.nxos.nxos'
+
+    - name: Print Show commands
+      debug:
+        msg: "{{ show_output.stdout}}"
+      when: ansible_network_os == 'cisco.nxos.nxos'
+
+
+    - name: Check Cisco IOS Devices
+      cisco.ios.ios_command:
+        commands:
+          - "show version | include up" 
+          - show ip inter brief 
+      register: show_output
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: Print Show commands
+      debug:
+        msg: "{{ show_output.stdout}}"
+      when: ansible_network_os == 'cisco.ios.ios'
+
+    - name: Check Cisco IOSXR Devices
+      cisco.iosxr.iosxr_command:
+        commands: 
+          - show version  | in up
+          - show ipv4 inter brief
+      register: show_output
+      when: ansible_network_os == 'cisco.iosxr.iosxr'
+
+    - name: Print Show commands
+      debug:
+        msg: "{{ show_output.stdout}}"
+      when: ansible_network_os == 'cisco.iosxr.iosxr'
+
+
+    - name: Check Arista EOS Devices
+      arista.eos.eos_command:
+        commands:
+          - "show version | include Uptime:" 
+          - show ip inter brief
+      register: show_output
+      when: ansible_network_os == 'arista.eos.eos'
+
+
+    - name: Print Show commands
+      debug:
+        msg: "{{ show_output.stdout}}"
+      when: ansible_network_os == 'arista.eos.eos'
+
+
+
+    - name: Check Junos devices
+      juniper.device.facts:
+        savedir: "{{ playbook_dir }}/output"
+      register: show_output 
+      when: ansible_network_os == 'junipernetworks.junos.junos'
+
+    - name: Print version
+      debug:
+        msg: "{{ show_output.stdout}}"
+      when: ansible_network_os == 'junipernetworks.junos.junos'
+
+
+    - name: Check Cisco ASA
+      cisco.asa.asa_command:
+        commands:
+          - show version 
+ 
+      register: show_output2
+      when: ansible_network_os == 'cisco.asa.asa'
+
+    - name: Print Show commands
+      debug:
+        msg: "{{ show_output2.stdout}}"
+      when: ansible_network_os == 'cisco.asa.asa'  
+
+
+
+
+

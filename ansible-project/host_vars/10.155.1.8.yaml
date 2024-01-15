@@ -1,0 +1,5 @@
+---
+loopback: 8.8.8.8
+ansible_network_os: cisco.ios.ios
+ansible_become_method: enable
+ansible_become_password: cisco
